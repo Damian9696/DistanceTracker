@@ -6,4 +6,5 @@
     <string name="permission_continue">Continue</string>
     <string name="permission_location_content">Welcome to the Distance Tracker app. A location permission is required to use the features of the apps based on Google Maps. Otherwise, the application functions cannot be used. If you agree, click Continue.</string>
     <string name="permission_required">Permission required</string>
+    <string name="permission_location_rationale_message">This application cannot work without Location Permission</string>
 </resources>
