@@ -30,6 +30,8 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
+        android:alpha="1"
+        android:id="@+id/hint_cardView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:cardCornerRadius="24dp"
@@ -39,7 +41,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/instruction_textView"
+            android:id="@+id/hint_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawablePadding="8dp"
@@ -53,7 +55,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
     </androidx.cardview.widget.CardView>
 
     <Button
@@ -61,10 +62,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
-        android:backgroundTint="@android:color/holo_green_light"
         android:text="@string/map_start"
-        android:visibility="invisible"
+        android:backgroundTint="@android:color/holo_green_light"
         app:icon="@drawable/ic_start"
+        android:alpha="0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -76,7 +77,7 @@
         android:layout_marginBottom="32dp"
         android:backgroundTint="@android:color/holo_red_light"
         android:text="@string/map_stop"
-        android:visibility="invisible"
+        android:visibility="gone"
         app:icon="@drawable/ic_stop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -89,7 +90,7 @@
         android:layout_marginBottom="32dp"
         android:backgroundTint="@android:color/holo_orange_light"
         android:text="@string/map_reset"
-        android:visibility="invisible"
+        android:visibility="gone"
         app:icon="@drawable/ic_reset"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
