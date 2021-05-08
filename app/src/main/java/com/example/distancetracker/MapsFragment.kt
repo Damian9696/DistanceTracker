@@ -49,7 +49,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-        TODO("Not yet implemented")
     }
 
     override fun onDestroyView() {
