@@ -6,13 +6,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.example.distancetracker.databinding.FragmentMapsBinding
+import com.example.distancetracker.util.Permissions.hasBackgroundLocationPermission
+import com.example.distancetracker.util.Permissions.requestBackgroundLocationPermission
 import com.example.distancetracker.util.fadeAnimation
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.vmadalin.easypermissions.EasyPermissions
+import com.vmadalin.easypermissions.dialogs.SettingsDialog
 
-class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener {
+class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener,
+    EasyPermissions.PermissionCallbacks {
 
     private var _binding: FragmentMapsBinding? = null
     private val binding get() = _binding!!
@@ -48,7 +54,47 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     }
 
     private fun createStartButton() {
-        binding.startButton.setOnClickListener {}
+        binding.startButton.setOnClickListener {
+            onStartButtonClicked()
+        }
+    }
+
+    private fun onStartButtonClicked() {
+        context?.let { context ->
+            if (hasBackgroundLocationPermission(context)) {
+                Toast.makeText(context, "onStartButtonClicked", Toast.LENGTH_SHORT).show()
+            } else {
+                requestBackgroundLocationPermission(this)
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        EasyPermissions.onRequestPermissionsResult(
+            requestCode,
+            permissions,
+            grantResults,
+            this
+        )
+    }
+
+    override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            context?.let { context ->
+                SettingsDialog.Builder(context).build().show()
+            }
+        } else {
+            requestBackgroundLocationPermission(this)
+        }
+    }
+
+    override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {
+        onStartButtonClicked()
     }
 
     @SuppressLint("MissingPermission")
