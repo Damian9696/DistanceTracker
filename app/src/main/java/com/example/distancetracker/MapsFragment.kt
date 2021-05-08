@@ -1,26 +1,16 @@
 package com.example.distancetracker
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import androidx.fragment.app.Fragment
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import android.widget.ViewAnimator
-import androidx.core.view.isVisible
-import androidx.lifecycle.lifecycleScope
 import com.example.distancetracker.databinding.FragmentMapsBinding
 import com.example.distancetracker.util.fadeAnimation
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener {
 
@@ -58,9 +48,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     }
 
     private fun createStartButton() {
-        binding.startButton.setOnClickListener {
-            Toast.makeText(requireContext(), "tetsstat", Toast.LENGTH_SHORT).show()
-        }
+        binding.startButton.setOnClickListener {}
     }
 
     @SuppressLint("MissingPermission")
