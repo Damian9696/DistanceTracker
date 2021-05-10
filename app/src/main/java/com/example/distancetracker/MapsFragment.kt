@@ -3,14 +3,16 @@ package com.example.distancetracker
 import android.annotation.SuppressLint
 import androidx.fragment.app.Fragment
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.example.distancetracker.databinding.FragmentMapsBinding
 import com.example.distancetracker.util.Permissions.hasBackgroundLocationPermission
 import com.example.distancetracker.util.Permissions.requestBackgroundLocationPermission
 import com.example.distancetracker.util.fadeAnimation
+import com.example.distancetracker.util.scaleXYAnimation
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -62,11 +64,40 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     private fun onStartButtonClicked() {
         context?.let { context ->
             if (hasBackgroundLocationPermission(context)) {
-                Toast.makeText(context, "onStartButtonClicked", Toast.LENGTH_SHORT).show()
+                binding.startButton.fadeAnimation(0f, 500)
+                startCountDown()
             } else {
                 requestBackgroundLocationPermission(this)
             }
         }
+    }
+
+    private fun startCountDown() {
+        val timer: CountDownTimer = object : CountDownTimer(4000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                val currentSecond = millisUntilFinished / 1000
+                if (currentSecond == 0L) {
+                    context?.let { context ->
+                        binding.timerTextView.setTextColor(
+                            ContextCompat.getColor(
+                                context,
+                                android.R.color.holo_green_light
+                            )
+                        )
+                    }
+                    binding.timerTextView.text = getString(R.string.map_go)
+                } else {
+                    binding.timerTextView.text = currentSecond.toString()
+                }
+
+                binding.timerCardView.scaleXYAnimation(0f, 1f, 900)
+            }
+
+            override fun onFinish() =
+                binding.stopButton.fadeAnimation(1f, 500)
+
+        }
+        timer.start()
     }
 
     override fun onRequestPermissionsResult(
