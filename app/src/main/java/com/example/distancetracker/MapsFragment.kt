@@ -93,9 +93,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
                 binding.timerCardView.scaleXYAnimation(0f, 1f, 900)
             }
 
-            override fun onFinish() {
+            override fun onFinish() =
                 binding.stopButton.fadeAnimation(1f, 500)
-            }
 
         }
         timer.start()
