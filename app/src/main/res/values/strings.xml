@@ -12,4 +12,5 @@
     <string name="map_start">start</string>
     <string name="map_stop">stop</string>
     <string name="map_reset">reset</string>
+    <string name="map_go">GO</string>
 </resources>
