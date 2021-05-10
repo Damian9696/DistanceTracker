@@ -1,6 +1,7 @@
 package com.example.distancetracker
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -9,8 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import com.example.distancetracker.databinding.FragmentMapsBinding
+import com.example.distancetracker.service.TrackerService
 import com.example.distancetracker.util.Permissions.hasBackgroundLocationPermission
 import com.example.distancetracker.util.Permissions.requestBackgroundLocationPermission
+import com.example.distancetracker.util.ServiceEnum
 import com.example.distancetracker.util.fadeAnimation
 import com.example.distancetracker.util.scaleXYAnimation
 import com.google.android.gms.maps.GoogleMap
@@ -93,11 +96,25 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
                 binding.timerCardView.scaleXYAnimation(0f, 1f, 900)
             }
 
-            override fun onFinish() =
+            override fun onFinish() {
                 binding.stopButton.fadeAnimation(1f, 500)
+                sendActionCommandToService(ServiceEnum.ACTION_SERVICE_START)
+            }
 
         }
         timer.start()
+    }
+
+    private fun sendActionCommandToService(serviceEnum: ServiceEnum) {
+        context?.let { context ->
+            Intent(
+                context,
+                TrackerService::class.java
+            ).apply {
+                this.action = serviceEnum.action
+                context.startService(this)
+            }
+        }
     }
 
     override fun onRequestPermissionsResult(
