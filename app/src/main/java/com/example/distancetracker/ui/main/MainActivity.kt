@@ -1,9 +1,10 @@
-package com.example.distancetracker
+package com.example.distancetracker.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import com.example.distancetracker.R
 import com.example.distancetracker.util.Permissions.hasLocationPermission
 import dagger.hilt.android.AndroidEntryPoint
 
