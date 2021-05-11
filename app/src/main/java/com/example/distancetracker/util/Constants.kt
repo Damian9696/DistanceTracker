@@ -7,4 +7,12 @@ object Constants {
 
     const val SERVICE_START = "SERVICE_START"
     const val SERVICE_STOP = "SERVICE_STOP"
+
+    const val NOTIFICATION_CHANNEL_ID = "tracker_notification_id"
+    const val NOTIFICATION_CHANNEL_NAME = "tracker_notification"
+    const val NOTIFICATION_ID = 3
+
+    const val PENDING_INTENT_REQUEST_CODE = 4
+
+    const val ACTION_NAVIGATE_TO_MAPS_FRAGMENT = "ACTION_NAVIGATE_TO_MAPS_FRAGMENT"
 }
