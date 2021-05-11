@@ -10,6 +10,7 @@ import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
 import com.example.distancetracker.util.Constants.NOTIFICATION_CHANNEL_ID
 import com.example.distancetracker.util.Constants.NOTIFICATION_CHANNEL_NAME
+import com.example.distancetracker.util.Constants.NOTIFICATION_ID
 import com.example.distancetracker.util.Constants.SERVICE_START
 import com.example.distancetracker.util.Constants.SERVICE_STOP
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,13 +43,24 @@ class TrackerService : LifecycleService() {
 
         intent?.let {
             when (it.action) {
-                SERVICE_START -> started.value = true
+                SERVICE_START -> {
+                    started.value = true
+                    startForegroundService()
+                }
                 SERVICE_STOP -> started.value = false
                 else -> throw IllegalStateException("Action is not available. Action must be SERVICE_START or SERVICE_STOP.")
             }
         }
 
         return super.onStartCommand(intent, flags, startId)
+    }
+
+    private fun startForegroundService() {
+        buildNotificationChannel()
+        startForeground(
+            NOTIFICATION_ID,
+            notification.build()
+        )
     }
 
     private fun buildNotificationChannel() {
