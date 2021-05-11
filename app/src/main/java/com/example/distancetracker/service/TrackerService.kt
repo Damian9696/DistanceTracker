@@ -1,21 +1,30 @@
 package com.example.distancetracker.service
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_LOW
 import android.content.Intent
 import android.os.Build
+import android.os.Looper
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
+import com.example.distancetracker.util.Constants.LOCATION_FASTEST_UPDATE_INTERVAL
+import com.example.distancetracker.util.Constants.LOCATION_UPDATE_INTERVAL
 import com.example.distancetracker.util.Constants.NOTIFICATION_CHANNEL_ID
 import com.example.distancetracker.util.Constants.NOTIFICATION_CHANNEL_NAME
 import com.example.distancetracker.util.Constants.NOTIFICATION_ID
 import com.example.distancetracker.util.Constants.SERVICE_START
 import com.example.distancetracker.util.Constants.SERVICE_STOP
+import com.google.android.gms.location.*
+import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.IllegalStateException
 import javax.inject.Inject
+
+private const val TAG = "TrackerService"
 
 @AndroidEntryPoint
 class TrackerService : LifecycleService() {
@@ -26,8 +35,22 @@ class TrackerService : LifecycleService() {
     @Inject
     lateinit var notificationManager: NotificationManager
 
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
     companion object {
         val started = MutableLiveData<Boolean>()
+    }
+
+    private val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            super.onLocationResult(locationResult)
+            locationResult.locations?.let { locations ->
+                for (location in locations) {
+                    val newLatLng = LatLng(location.latitude, location.longitude)
+                    Log.d(TAG, "New lat: ${newLatLng.latitude} long: ${newLatLng.longitude}")
+                }
+            }
+        }
     }
 
     private fun initValues() {
@@ -36,6 +59,7 @@ class TrackerService : LifecycleService() {
 
     override fun onCreate() {
         initValues()
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         super.onCreate()
     }
 
@@ -46,6 +70,7 @@ class TrackerService : LifecycleService() {
                 SERVICE_START -> {
                     started.value = true
                     startForegroundService()
+                    startLocationUpdates()
                 }
                 SERVICE_STOP -> started.value = false
                 else -> throw IllegalStateException("Action is not available. Action must be SERVICE_START or SERVICE_STOP.")
@@ -61,6 +86,21 @@ class TrackerService : LifecycleService() {
             NOTIFICATION_ID,
             notification.build()
         )
+    }
+
+    @SuppressLint("MissingPermission")
+    fun startLocationUpdates() {
+        val locationRequest = LocationRequest.create().apply {
+            interval = LOCATION_UPDATE_INTERVAL
+            fastestInterval = LOCATION_FASTEST_UPDATE_INTERVAL
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
+
+        fusedLocationProviderClient.requestLocationUpdates(
+            locationRequest,
+            locationCallback,
+            Looper.getMainLooper()
+            )
     }
 
     private fun buildNotificationChannel() {
