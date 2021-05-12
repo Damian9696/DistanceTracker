@@ -5,9 +5,9 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_LOW
 import android.content.Intent
+import android.location.Location
 import android.os.Build
 import android.os.Looper
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
@@ -18,13 +18,13 @@ import com.example.distancetracker.util.Constants.NOTIFICATION_CHANNEL_NAME
 import com.example.distancetracker.util.Constants.NOTIFICATION_ID
 import com.example.distancetracker.util.Constants.SERVICE_START
 import com.example.distancetracker.util.Constants.SERVICE_STOP
+import com.example.distancetracker.util.toLatLng
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.IllegalStateException
 import javax.inject.Inject
 
-private const val TAG = "TrackerService"
 
 @AndroidEntryPoint
 class TrackerService : LifecycleService() {
@@ -39,6 +39,7 @@ class TrackerService : LifecycleService() {
 
     companion object {
         val started = MutableLiveData<Boolean>()
+        val locationList = MutableLiveData<MutableList<LatLng>>()
     }
 
     private val locationCallback = object : LocationCallback() {
@@ -46,8 +47,7 @@ class TrackerService : LifecycleService() {
             super.onLocationResult(locationResult)
             locationResult.locations?.let { locations ->
                 for (location in locations) {
-                    val newLatLng = LatLng(location.latitude, location.longitude)
-                    Log.d(TAG, "New lat: ${newLatLng.latitude} long: ${newLatLng.longitude}")
+                    updateLocationList(location)
                 }
             }
         }
@@ -55,6 +55,15 @@ class TrackerService : LifecycleService() {
 
     private fun initValues() {
         started.value = false
+        locationList.value = mutableListOf<LatLng>()
+    }
+
+    private fun updateLocationList(location: Location) {
+        val latLng = location.toLatLng()
+        locationList.value?.apply {
+            add(latLng)
+            locationList.value = this
+        }
     }
 
     override fun onCreate() {
@@ -100,7 +109,7 @@ class TrackerService : LifecycleService() {
             locationRequest,
             locationCallback,
             Looper.getMainLooper()
-            )
+        )
     }
 
     private fun buildNotificationChannel() {

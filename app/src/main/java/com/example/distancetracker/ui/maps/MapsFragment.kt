@@ -20,6 +20,7 @@ import com.example.distancetracker.util.scaleXYAnimation
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.dialogs.SettingsDialog
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,6 +32,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     private var _binding: FragmentMapsBinding? = null
     private val binding get() = _binding!!
 
+    private var locationList = mutableListOf<LatLng>()
     private lateinit var googleMap: GoogleMap
 
     override fun onCreateView(
@@ -51,6 +53,14 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
+    }
+
+    private fun subscribeTrackerService() {
+        TrackerService.locationList.observe(viewLifecycleOwner) {
+            it?.let {
+                locationList = it
+            }
+        }
     }
 
     private fun createResetButton() {
@@ -161,6 +171,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
             isCompassEnabled = false
             isScrollGesturesEnabled = false
         }
+        subscribeTrackerService()
     }
 
     override fun onDestroyView() {
