@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_LOW
+import android.content.Context
 import android.content.Intent
 import android.location.Location
 import android.os.Build
@@ -81,12 +82,28 @@ class TrackerService : LifecycleService() {
                     startForegroundService()
                     startLocationUpdates()
                 }
-                SERVICE_STOP -> started.value = false
+                SERVICE_STOP -> {
+                    stopForegroundService()
+                    started.value = false
+                }
                 else -> throw IllegalStateException("Action is not available. Action must be SERVICE_START or SERVICE_STOP.")
             }
         }
 
         return super.onStartCommand(intent, flags, startId)
+    }
+
+    private fun stopForegroundService() {
+        removeLocationUpdates()
+        (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(
+            NOTIFICATION_ID
+        )
+        stopForeground(true)
+        stopSelf()
+    }
+
+    private fun removeLocationUpdates() {
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 
     private fun startForegroundService() {

@@ -71,7 +71,10 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     }
 
     private fun createStopButton() {
-        binding.stopButton.setOnClickListener { }
+        binding.stopButton.setOnClickListener {
+            sendActionCommandToService(ServiceEnum.ACTION_SERVICE_STOP)
+            binding.stopButton.fadeAnimation(0f, 500)
+        }
     }
 
     private fun createStartButton() {
