@@ -1,4 +1,4 @@
-package com.example.distancetracker.util
+package com.example.distancetracker.ext
 
 import android.location.Location
 import com.google.android.gms.maps.model.LatLng
