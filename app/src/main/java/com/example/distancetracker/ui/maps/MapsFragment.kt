@@ -11,16 +11,17 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import com.example.distancetracker.R
 import com.example.distancetracker.databinding.FragmentMapsBinding
+import com.example.distancetracker.ext.fadeAnimation
+import com.example.distancetracker.ext.scaleXYAnimation
+import com.example.distancetracker.map.MapCamera
+import com.example.distancetracker.map.Shapes
 import com.example.distancetracker.service.TrackerService
+import com.example.distancetracker.util.*
 import com.example.distancetracker.util.Permissions.hasBackgroundLocationPermission
 import com.example.distancetracker.util.Permissions.requestBackgroundLocationPermission
-import com.example.distancetracker.util.ServiceEnum
-import com.example.distancetracker.util.fadeAnimation
-import com.example.distancetracker.util.scaleXYAnimation
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.dialogs.SettingsDialog
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,8 +33,9 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     private var _binding: FragmentMapsBinding? = null
     private val binding get() = _binding!!
 
-    private var locationList = mutableListOf<LatLng>()
     private lateinit var googleMap: GoogleMap
+    private val shapes by lazy { Shapes(googleMap) }
+    private val mapCamera by lazy { MapCamera(googleMap) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,8 +59,9 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
 
     private fun subscribeTrackerService() {
         TrackerService.locationList.observe(viewLifecycleOwner) {
-            it?.let {
-                locationList = it
+            it?.let { locationList ->
+                shapes.drawPolyline(locationList)
+                mapCamera.followPolyline(locationList)
             }
         }
     }
@@ -173,6 +176,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
         }
         subscribeTrackerService()
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -1,4 +1,4 @@
-package com.example.distancetracker.util
+package com.example.distancetracker.ext
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter

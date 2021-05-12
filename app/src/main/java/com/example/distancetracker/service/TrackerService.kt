@@ -11,6 +11,7 @@ import android.os.Looper
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
+import com.example.distancetracker.ext.toLatLng
 import com.example.distancetracker.util.Constants.LOCATION_FASTEST_UPDATE_INTERVAL
 import com.example.distancetracker.util.Constants.LOCATION_UPDATE_INTERVAL
 import com.example.distancetracker.util.Constants.NOTIFICATION_CHANNEL_ID
@@ -18,7 +19,6 @@ import com.example.distancetracker.util.Constants.NOTIFICATION_CHANNEL_NAME
 import com.example.distancetracker.util.Constants.NOTIFICATION_ID
 import com.example.distancetracker.util.Constants.SERVICE_START
 import com.example.distancetracker.util.Constants.SERVICE_STOP
-import com.example.distancetracker.util.toLatLng
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.AndroidEntryPoint
@@ -55,7 +55,7 @@ class TrackerService : LifecycleService() {
 
     private fun initValues() {
         started.value = false
-        locationList.value = mutableListOf<LatLng>()
+        locationList.value = mutableListOf()
     }
 
     private fun updateLocationList(location: Location) {
