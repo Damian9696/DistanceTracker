@@ -4,6 +4,8 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.SphericalUtil
+import java.text.DecimalFormat
 
 class MapCamera(private val googleMap: GoogleMap) {
 
@@ -28,5 +30,20 @@ class MapCamera(private val googleMap: GoogleMap) {
                 null
             )
         }
+    }
+
+    fun calculateTheDistance(locationList: MutableList<LatLng>): String {
+        if (locationList.isNotEmpty()) {
+            val meters =
+                SphericalUtil.computeDistanceBetween(locationList.first(), locationList.last())
+
+            return if (meters > 1000) {
+                val kilometers = meters / 1000
+                DecimalFormat("#.##km").format(kilometers)
+            } else {
+                "${meters}m"
+            }
+        }
+        return "0m"
     }
 }
