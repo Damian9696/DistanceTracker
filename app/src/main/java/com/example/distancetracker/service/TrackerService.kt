@@ -41,6 +41,8 @@ class TrackerService : LifecycleService() {
     companion object {
         val started = MutableLiveData<Boolean>()
         val locationList = MutableLiveData<MutableList<LatLng>>()
+        val startTime = MutableLiveData<Long>()
+        val stopTime = MutableLiveData<Long>()
     }
 
     private val locationCallback = object : LocationCallback() {
@@ -57,6 +59,8 @@ class TrackerService : LifecycleService() {
     private fun initValues() {
         started.value = false
         locationList.value = mutableListOf()
+        startTime.value = 0L
+        stopTime.value = 0L
     }
 
     private fun updateLocationList(location: Location) {
@@ -81,10 +85,12 @@ class TrackerService : LifecycleService() {
                     started.value = true
                     startForegroundService()
                     startLocationUpdates()
+                    startTime.value = System.currentTimeMillis()
                 }
                 SERVICE_STOP -> {
-                    stopForegroundService()
                     started.value = false
+                    stopForegroundService()
+                    stopTime.value = System.currentTimeMillis()
                 }
                 else -> throw IllegalStateException("Action is not available. Action must be SERVICE_START or SERVICE_STOP.")
             }
