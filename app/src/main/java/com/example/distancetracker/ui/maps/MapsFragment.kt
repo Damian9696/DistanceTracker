@@ -16,6 +16,7 @@ import com.example.distancetracker.ext.scaleXYAnimation
 import com.example.distancetracker.map.MapCamera
 import com.example.distancetracker.map.Shapes
 import com.example.distancetracker.service.TrackerService
+import com.example.distancetracker.time.Time
 import com.example.distancetracker.util.*
 import com.example.distancetracker.util.Permissions.hasBackgroundLocationPermission
 import com.example.distancetracker.util.Permissions.requestBackgroundLocationPermission
@@ -34,8 +35,10 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     private val binding get() = _binding!!
 
     private lateinit var googleMap: GoogleMap
+
     private val shapes by lazy { Shapes(googleMap) }
     private val mapCamera by lazy { MapCamera(googleMap) }
+    private val time by lazy { Time() }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,6 +67,19 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
                 mapCamera.followPolyline(locationList)
             }
         }
+
+        TrackerService.startTime.observe(viewLifecycleOwner) {
+            it?.let { startTime ->
+                time.start = startTime
+            }
+        }
+
+        TrackerService.stopTime.observe(viewLifecycleOwner) {
+            it?.let { stopTime ->
+                time.stop = stopTime
+            }
+        }
+
     }
 
     private fun createResetButton() {
