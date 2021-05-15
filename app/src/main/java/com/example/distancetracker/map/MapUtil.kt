@@ -4,6 +4,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.maps.android.SphericalUtil
 import java.text.DecimalFormat
 
@@ -30,6 +31,18 @@ class MapCamera(private val googleMap: GoogleMap) {
                 null
             )
         }
+    }
+
+    fun showBiggerPicture(locations: List<LatLng>) {
+        val bounds = LatLngBounds.Builder()
+        for (location in locations) {
+            bounds.include(location)
+        }
+        googleMap.animateCamera(
+            CameraUpdateFactory.newLatLngBounds(
+                bounds.build(), 100
+            ), 2000, null
+        )
     }
 
     fun calculateTheDistance(locationList: MutableList<LatLng>): String {
