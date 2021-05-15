@@ -8,7 +8,7 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.google.maps.android.SphericalUtil
 import java.text.DecimalFormat
 
-class MapCamera(private val googleMap: GoogleMap) {
+class MapUtil(private val googleMap: GoogleMap) {
 
     private fun setCameraPosition(latLng: LatLng): CameraPosition {
         return CameraPosition
@@ -45,18 +45,20 @@ class MapCamera(private val googleMap: GoogleMap) {
         )
     }
 
-    fun calculateTheDistance(locationList: MutableList<LatLng>): String {
-        if (locationList.isNotEmpty()) {
-            val meters =
-                SphericalUtil.computeDistanceBetween(locationList.first(), locationList.last())
+    companion object {
+        fun calculateTheDistance(locationList: MutableList<LatLng>): String {
+            if (locationList.isNotEmpty()) {
+                val meters =
+                    SphericalUtil.computeDistanceBetween(locationList.first(), locationList.last())
 
-            return if (meters > 1000) {
-                val kilometers = meters / 1000
-                DecimalFormat("#.##km").format(kilometers)
-            } else {
-                "${meters}m"
+                return if (meters > 1000) {
+                    val kilometers = meters / 1000
+                    DecimalFormat("#.##km").format(kilometers)
+                } else {
+                    DecimalFormat("#m").format(meters)
+                }
             }
+            return "0m"
         }
-        return "0m"
     }
 }
