@@ -13,7 +13,7 @@ import com.example.distancetracker.R
 import com.example.distancetracker.databinding.FragmentMapsBinding
 import com.example.distancetracker.ext.fadeAnimation
 import com.example.distancetracker.ext.scaleXYAnimation
-import com.example.distancetracker.map.MapCamera
+import com.example.distancetracker.map.MapUtil
 import com.example.distancetracker.map.Shapes
 import com.example.distancetracker.service.TrackerService
 import com.example.distancetracker.time.Time
@@ -38,7 +38,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     private lateinit var googleMap: GoogleMap
 
     private val shapes by lazy { Shapes(googleMap) }
-    private val mapCamera by lazy { MapCamera(googleMap) }
+    private val mapCamera by lazy { MapUtil(googleMap) }
     private val time by lazy { Time() }
 
     private var locations = emptyList<LatLng>()
