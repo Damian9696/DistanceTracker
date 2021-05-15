@@ -20,9 +20,12 @@ import com.example.distancetracker.time.Time
 import com.example.distancetracker.util.*
 import com.example.distancetracker.util.Permissions.hasBackgroundLocationPermission
 import com.example.distancetracker.util.Permissions.requestBackgroundLocationPermission
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.dialogs.SettingsDialog
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,6 +42,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     private val shapes by lazy { Shapes(googleMap) }
     private val mapCamera by lazy { MapCamera(googleMap) }
     private val time by lazy { Time() }
+
+    private var locations = emptyList<LatLng>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,6 +70,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
             it?.let { locationList ->
                 shapes.drawPolyline(locationList)
                 mapCamera.followPolyline(locationList)
+                locations = locationList
             }
         }
 
@@ -90,6 +96,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
         binding.stopButton.setOnClickListener {
             sendActionCommandToService(ServiceEnum.ACTION_SERVICE_STOP)
             binding.stopButton.fadeAnimation(0f, 500)
+            mapCamera.showBiggerPicture(locations)
         }
     }
 
