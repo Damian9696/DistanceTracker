@@ -13,4 +13,5 @@
     <string name="map_stop">stop</string>
     <string name="map_reset">reset</string>
     <string name="map_go">GO</string>
+    <string name="service_notification_title">Distance Traveled</string>
 </resources>
