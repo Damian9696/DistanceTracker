@@ -20,12 +20,10 @@ import com.example.distancetracker.time.Time
 import com.example.distancetracker.util.*
 import com.example.distancetracker.util.Permissions.hasBackgroundLocationPermission
 import com.example.distancetracker.util.Permissions.requestBackgroundLocationPermission
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.dialogs.SettingsDialog
 import dagger.hilt.android.AndroidEntryPoint
@@ -57,6 +55,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        bindLifecycleOwner()
+
         createStartButton()
         createStopButton()
         createResetButton()
@@ -65,27 +65,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
         mapFragment?.getMapAsync(this)
     }
 
-    private fun subscribeTrackerService() {
-        TrackerService.locationList.observe(viewLifecycleOwner) {
-            it?.let { locationList ->
-                shapes.drawPolyline(locationList)
-                mapCamera.followPolyline(locationList)
-                locations = locationList
-            }
-        }
-
-        TrackerService.startTime.observe(viewLifecycleOwner) {
-            it?.let { startTime ->
-                time.start = startTime
-            }
-        }
-
-        TrackerService.stopTime.observe(viewLifecycleOwner) {
-            it?.let { stopTime ->
-                time.stop = stopTime
-            }
-        }
-
+    private fun bindLifecycleOwner() {
+        binding.lifecycleOwner = this
     }
 
     private fun createResetButton() {
@@ -203,6 +184,31 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
         subscribeTrackerService()
     }
 
+    private fun subscribeTrackerService() {
+
+        binding.trackerService = TrackerService()
+
+        TrackerService.locationList.observe(viewLifecycleOwner) {
+            it?.let { locationList ->
+                shapes.drawPolyline(locationList)
+                mapCamera.followPolyline(locationList)
+                locations = locationList
+            }
+        }
+
+        TrackerService.startTime.observe(viewLifecycleOwner) {
+            it?.let { startTime ->
+                time.start = startTime
+            }
+        }
+
+        TrackerService.stopTime.observe(viewLifecycleOwner) {
+            it?.let { stopTime ->
+                time.stop = stopTime
+            }
+        }
+
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
