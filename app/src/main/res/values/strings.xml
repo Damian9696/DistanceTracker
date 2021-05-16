@@ -1,4 +1,6 @@
 <resources>
+
+    //Global
     <string name="app_name">DistanceTracker</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
@@ -7,11 +9,22 @@
     <string name="permission_location_content">Welcome to the Distance Tracker app. A location permission is required to use the features of the apps based on Google Maps. Otherwise, the application functions cannot be used. If you agree, click Continue.</string>
     <string name="permission_required">Permission required</string>
     <string name="permission_rationale_message">This application cannot work without this Permission</string>
+
+    //Map
     <string name="map_countdown">3</string>
     <string name="map_mylocation_button_instruction">Tap on MyLocation Button</string>
     <string name="map_start">start</string>
     <string name="map_stop">stop</string>
     <string name="map_reset">reset</string>
     <string name="map_go">GO</string>
+
+    //Service
     <string name="service_notification_title">Distance Traveled</string>
+
+    //Result
+    <string name="result">Result</string>
+    <string name="result_distance">Distance</string>
+    <string name="result_0m">0m</string>
+    <string name="result_time">Time</string>
+    <string name="result_share">Share</string>
 </resources>
