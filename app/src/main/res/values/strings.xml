@@ -28,4 +28,5 @@
     <string name="result_time">Time</string>
     <string name="result_share">Share</string>
     <string name="result_time_sample">00:00:00</string>
+    <string name="result_share_text">Hi was using the app DistanceTracker. I went %1$s in %2$s. Try it out for yourself [Google PLay link]</string>
 </resources>
