@@ -1,4 +1,4 @@
-package com.example.distancetracker.time
+package com.example.distancetracker.util
 
 object TimeUtil {
 
@@ -9,6 +9,10 @@ object TimeUtil {
         val minutes = (elapsedTime / (1000 * 60) % 60)
         val hours = (elapsedTime / (1000 * 60 * 60) % 24)
 
-        return "$hours:$minutes:$seconds"
+        val hourString = if (hours < 10) "0$hours" else "$hours"
+        val minutesString = if (minutes < 10) "0$minutes" else "$minutes"
+        val secondsString = if (seconds < 10) "0$seconds" else "$seconds"
+
+        return "$hourString:$minutesString:$secondsString"
     }
 }

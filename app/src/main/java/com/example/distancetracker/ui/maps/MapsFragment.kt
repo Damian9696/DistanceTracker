@@ -9,14 +9,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.distancetracker.R
 import com.example.distancetracker.databinding.FragmentMapsBinding
 import com.example.distancetracker.ext.fadeAnimation
 import com.example.distancetracker.ext.scaleXYAnimation
 import com.example.distancetracker.map.MapUtil
 import com.example.distancetracker.map.Shapes
+import com.example.distancetracker.model.Result
 import com.example.distancetracker.service.TrackerService
-import com.example.distancetracker.time.Time
+import com.example.distancetracker.model.Time
 import com.example.distancetracker.util.*
 import com.example.distancetracker.util.Permissions.hasBackgroundLocationPermission
 import com.example.distancetracker.util.Permissions.requestBackgroundLocationPermission
@@ -27,6 +30,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.dialogs.SettingsDialog
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener,
@@ -77,7 +82,22 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
         binding.stopButton.setOnClickListener {
             sendActionCommandToService(ServiceEnum.ACTION_SERVICE_STOP)
             binding.stopButton.fadeAnimation(0f, 500)
-            mapCamera.showBiggerPicture(locations)
+        }
+    }
+
+    private fun displayResult() {
+        val result = Result(
+            MapUtil.calculateTheDistance(locations),
+            TimeUtil.calculateElapsedTime(time.start, time.stop)
+        )
+        lifecycleScope.launch {
+            delay(2500)
+            findNavController().navigate(
+                MapsFragmentDirections.actionMapsFragmentToResultFragment(
+                    result
+                )
+            )
+            binding.resetButton.fadeAnimation(1f, 500)
         }
     }
 
@@ -204,10 +224,19 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
 
         TrackerService.stopTime.observe(viewLifecycleOwner) {
             it?.let { stopTime ->
-                time.stop = stopTime
+                stopTimeLogic(stopTime)
             }
         }
 
+    }
+
+    private fun stopTimeLogic(stopTime: Long) {
+        time.stop = stopTime
+
+        if (stopTime != 0L) {
+            mapCamera.showBiggerPicture(locations)
+            displayResult()
+        }
     }
 
     override fun onDestroyView() {

@@ -24,7 +24,8 @@
     //Result
     <string name="result">Result</string>
     <string name="result_distance">Distance</string>
-    <string name="result_0m">0m</string>
+    <string name="result_distance_sample">0m</string>
     <string name="result_time">Time</string>
     <string name="result_share">Share</string>
+    <string name="result_time_sample">00:00:00</string>
 </resources>

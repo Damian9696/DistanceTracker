@@ -46,7 +46,7 @@ class MapUtil(private val googleMap: GoogleMap) {
     }
 
     companion object {
-        fun calculateTheDistance(locationList: MutableList<LatLng>): String {
+        fun calculateTheDistance(locationList: List<LatLng>): String {
             if (locationList.isNotEmpty()) {
                 val meters =
                     SphericalUtil.computeDistanceBetween(locationList.first(), locationList.last())

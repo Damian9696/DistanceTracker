@@ -1,4 +1,4 @@
-package com.example.distancetracker.time
+package com.example.distancetracker.model
 
 class Time {
     var start = 0L

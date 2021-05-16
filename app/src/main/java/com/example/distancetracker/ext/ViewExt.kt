@@ -7,6 +7,7 @@ import android.animation.ObjectAnimator.ofFloat
 import android.animation.PropertyValuesHolder
 import android.view.View
 import androidx.core.view.isVisible
+import kotlinx.coroutines.delay
 
 fun View.fadeAnimation(alpha: Float, durationMilli: Long) {
 
@@ -29,6 +30,11 @@ fun View.fadeAnimation(alpha: Float, durationMilli: Long) {
             start()
         }
     }
+}
+
+suspend fun View.fadeAnimationWithDelay(alpha: Float, durationMilli: Long, delayMillis: Long) {
+    delay(delayMillis)
+    this.fadeAnimation(alpha, durationMilli)
 }
 
 fun View.scaleXYAnimation(startScale: Float, endScale: Float, durationMilli: Long) {
