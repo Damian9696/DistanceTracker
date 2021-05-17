@@ -10,7 +10,7 @@ import java.text.DecimalFormat
 
 class MapUtil(private val googleMap: GoogleMap) {
 
-    private fun setCameraPosition(latLng: LatLng): CameraPosition {
+    fun setCameraPosition(latLng: LatLng): CameraPosition {
         return CameraPosition
             .builder()
             .target(latLng)
