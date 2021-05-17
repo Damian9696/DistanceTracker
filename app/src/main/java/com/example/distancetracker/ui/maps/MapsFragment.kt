@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.distancetracker.R
 import com.example.distancetracker.databinding.FragmentMapsBinding
+import com.example.distancetracker.ext.changeTextColor
 import com.example.distancetracker.ext.fadeAnimation
 import com.example.distancetracker.ext.scaleXYAnimation
 import com.example.distancetracker.map.MapUtil
@@ -141,16 +142,10 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
             override fun onTick(millisUntilFinished: Long) {
                 val currentSecond = millisUntilFinished / 1000
                 if (currentSecond == 0L) {
-                    context?.let { context ->
-                        binding.timerTextView.setTextColor(
-                            ContextCompat.getColor(
-                                context,
-                                android.R.color.holo_green_light
-                            )
-                        )
-                    }
+                    binding.timerTextView.changeTextColor(android.R.color.holo_green_light)
                     binding.timerTextView.text = getString(R.string.map_go)
                 } else {
+                    binding.timerTextView.changeTextColor(android.R.color.holo_red_light)
                     binding.timerTextView.text = currentSecond.toString()
                 }
 
