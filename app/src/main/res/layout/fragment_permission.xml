@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.permission.PermissionFragment">
+
+    <ImageView
+        android:id="@+id/circle_imageView"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/ic_circle"
+        app:layout_constraintBottom_toTopOf="@+id/permissionTitle_textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:tint="@android:color/holo_blue_light"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/map_imageView"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
+        android:src="@drawable/ic_map"
+        app:layout_constraintBottom_toBottomOf="@id/circle_imageView"
+        app:layout_constraintEnd_toEndOf="@id/circle_imageView"
+        app:layout_constraintStart_toStartOf="@id/circle_imageView"
+        app:layout_constraintTop_toTopOf="@id/circle_imageView"
+        app:tint="@android:color/holo_red_light"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/distance_imageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_route"
+        app:layout_constraintBottom_toBottomOf="@id/map_imageView"
+        app:layout_constraintEnd_toEndOf="@id/map_imageView"
+        app:layout_constraintStart_toStartOf="@id/map_imageView"
+        app:layout_constraintTop_toTopOf="@id/map_imageView"
+        app:tint="@android:color/white"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/permissionTitle_textView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="@string/permission_required"
+        android:textAlignment="center"
+        android:textColor="@android:color/holo_red_light"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/permissionContent_textView"
+        app:layout_constraintEnd_toEndOf="@id/permissionContent_textView"
+        app:layout_constraintStart_toStartOf="@id/permissionContent_textView"
+        app:layout_constraintTop_toBottomOf="@id/circle_imageView" />
+
+    <TextView
+        android:id="@+id/permissionContent_textView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="@string/permission_location_content"
+        android:textColor="@color/text_color"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/continue_button"
+        app:layout_constraintEnd_toEndOf="@id/continue_button"
+        app:layout_constraintStart_toStartOf="@id/continue_button"
+        app:layout_constraintTop_toBottomOf="@id/permissionTitle_textView" />
+
+    <Button
+        android:id="@+id/continue_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
+        android:text="@string/permission_continue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/permissionContent_textView" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
