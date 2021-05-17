@@ -46,7 +46,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     private val mapCamera by lazy { MapUtil(googleMap) }
     private val time by lazy { Time() }
 
-    private var locations = emptyList<LatLng>()
+    private var locations = mutableListOf<LatLng>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -75,14 +75,32 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     }
 
     private fun createResetButton() {
-        binding.resetButton.setOnClickListener { }
+        binding.resetButton.setOnClickListener {
+            onResetButtonClicked()
+        }
+    }
+
+    private fun onResetButtonClicked() {
+        mapReset()
+    }
+
+    private fun mapReset() {
+        TrackerService.getLastKnownLocation()
+        shapes.removeAllPolylines()
+        locations.clear()
+        binding.resetButton.fadeAnimation(0f, 500)
+        binding.startButton.fadeAnimation(1f, 500)
     }
 
     private fun createStopButton() {
         binding.stopButton.setOnClickListener {
-            sendActionCommandToService(ServiceEnum.ACTION_SERVICE_STOP)
-            binding.stopButton.fadeAnimation(0f, 500)
+            onStopButtonClicked()
         }
+    }
+
+    private fun onStopButtonClicked() {
+        sendActionCommandToService(ServiceEnum.ACTION_SERVICE_STOP)
+        binding.stopButton.fadeAnimation(0f, 500)
     }
 
     private fun displayResult() {
@@ -225,6 +243,12 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
         TrackerService.stopTime.observe(viewLifecycleOwner) {
             it?.let { stopTime ->
                 stopTimeLogic(stopTime)
+            }
+        }
+
+        TrackerService.lastKnownLocation.observe(viewLifecycleOwner) {
+            it?.let {
+                mapCamera.setCameraPosition(it)
             }
         }
 
