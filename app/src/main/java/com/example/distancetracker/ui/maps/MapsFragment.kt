@@ -28,6 +28,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.dialogs.SettingsDialog
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,7 +37,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener,
-    EasyPermissions.PermissionCallbacks {
+    EasyPermissions.PermissionCallbacks, GoogleMap.OnMarkerClickListener {
 
     private var _binding: FragmentMapsBinding? = null
     private val binding get() = _binding!!
@@ -88,6 +89,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     private fun mapReset() {
         TrackerService.getLastKnownLocation()
         shapes.removeAllPolylines()
+        shapes.removeAllMarkers()
         locations.clear()
         binding.resetButton.fadeAnimation(0f, 500)
         binding.startButton.fadeAnimation(1f, 500)
@@ -206,6 +208,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
         googleMap = _googleMap
         googleMap.isMyLocationEnabled = true
         googleMap.setOnMyLocationButtonClickListener(this)
+        googleMap.setOnMarkerClickListener(this)
         googleMap.uiSettings.apply {
             isZoomControlsEnabled = false
             isZoomGesturesEnabled = false
@@ -254,6 +257,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
 
         if (stopTime != 0L) {
             mapCamera.showBiggerPicture(locations)
+            shapes.drawMarker(locations.first())
+            shapes.drawMarker(locations.last())
             displayResult()
         }
     }
@@ -267,5 +272,9 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
         binding.hintCardView.fadeAnimation(0f, 500)
         binding.startButton.fadeAnimation(1f, 500)
         return false
+    }
+
+    override fun onMarkerClick(p0: Marker): Boolean {
+        return true
     }
 }
