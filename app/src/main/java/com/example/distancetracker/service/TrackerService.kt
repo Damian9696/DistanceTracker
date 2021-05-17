@@ -38,13 +38,25 @@ class TrackerService : LifecycleService() {
     @Inject
     lateinit var notificationManager: NotificationManager
 
-    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-
     companion object {
+        private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
         val started = MutableLiveData<Boolean>()
         val locationList = MutableLiveData<MutableList<LatLng>>()
         val startTime = MutableLiveData<Long>()
         val stopTime = MutableLiveData<Long>()
+        val lastKnownLocation = MutableLiveData<LatLng?>()
+
+        @SuppressLint("MissingPermission")
+        fun getLastKnownLocation() {
+            fusedLocationProviderClient.lastLocation.addOnCompleteListener {
+                lastKnownLocation.value =
+                    LatLng(
+                        it.result.latitude,
+                        it.result.longitude
+                    )
+            }
+        }
     }
 
     private val locationCallback = object : LocationCallback() {
@@ -74,6 +86,7 @@ class TrackerService : LifecycleService() {
         locationList.value = mutableListOf()
         startTime.value = 0L
         stopTime.value = 0L
+        lastKnownLocation.value = null
     }
 
     private fun updateLocationList(location: Location) {
